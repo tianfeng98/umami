@@ -1,9 +1,12 @@
+import debug from 'debug';
 export const PRISMA = 'prisma';
 export const POSTGRESQL = 'postgresql';
 export const MYSQL = 'mysql';
 export const CLICKHOUSE = 'clickhouse';
 export const KAFKA = 'kafka';
 export const KAFKA_PRODUCER = 'kafka-producer';
+
+const log = debug('umami:db');
 
 // Fixes issue with converting bigint values
 BigInt.prototype['toJSON'] = function () {
@@ -20,7 +23,8 @@ export function getDatabaseType(url = process.env.DATABASE_URL) {
   return type;
 }
 
-export async function runQuery(queries: any) {
+export async function runQuery(queries: any, label?: string) {
+  log('runQuery', label);
   if (process.env.CLICKHOUSE_URL) {
     if (queries[KAFKA]) {
       return queries[KAFKA]();

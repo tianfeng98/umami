@@ -4,10 +4,13 @@ import { runQuery, PRISMA, CLICKHOUSE } from 'lib/db';
 import { QueryFilters } from 'lib/types';
 
 export async function getSessions(...args: [websiteId: string, filters: QueryFilters]) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getSessions',
+  );
 }
 
 async function relationalQuery(websiteId: string, filters: QueryFilters) {

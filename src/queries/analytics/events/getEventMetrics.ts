@@ -7,10 +7,13 @@ import { EVENT_TYPE } from 'lib/constants';
 export async function getEventMetrics(
   ...args: [websiteId: string, filters: QueryFilters]
 ): Promise<WebsiteEventMetric[]> {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getEventMetrics',
+  );
 }
 
 async function relationalQuery(websiteId: string, filters: QueryFilters) {

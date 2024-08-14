@@ -10,10 +10,13 @@ export async function getEventDataStats(
   fields: number;
   records: number;
 }> {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  }).then(results => results[0]);
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getEventDataStats',
+  ).then(results => results[0]);
 }
 
 async function relationalQuery(websiteId: string, filters: QueryFilters) {

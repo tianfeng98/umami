@@ -24,6 +24,14 @@ if (process.env.MAXMIND_LICENSE_KEY) {
 
 const dest = path.resolve(__dirname, '../geo');
 
+/**
+ * Check if the geo database file already exists
+ */
+if (fs.existsSync(path.join(dest, path.basename(`${db}.mmdb`)))) {
+  console.log(`${db}.mmdb is exit.`);
+  process.exit(0);
+}
+
 if (!fs.existsSync(dest)) {
   fs.mkdirSync(dest);
 }

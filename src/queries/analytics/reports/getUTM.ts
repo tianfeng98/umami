@@ -13,10 +13,13 @@ export async function getUTM(
     },
   ]
 ) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getUTM',
+  );
 }
 
 async function relationalQuery(

@@ -9,10 +9,13 @@ export async function getWebsiteStats(
 ): Promise<
   { pageviews: number; visitors: number; visits: number; bounces: number; totaltime: number }[]
 > {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getWebsiteStats',
+  );
 }
 
 async function relationalQuery(

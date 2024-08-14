@@ -31,18 +31,25 @@ function getClient() {
     password,
   } = new URL(process.env.CLICKHOUSE_URL);
 
-  const client = createClient({
+  const params = {
     host: `${protocol}//${hostname}:${port}`,
     database: pathname.replace('/', ''),
-    username: username,
-    password,
+    username: decodeURIComponent(username),
+    password: decodeURIComponent(password),
+  };
+
+  const client = createClient({
+    ...params,
+    // log: {
+    //   level: ClickHouseLogLevel.DEBUG,
+    // },
   });
 
   if (process.env.NODE_ENV !== 'production') {
     global[CLICKHOUSE] = client;
   }
 
-  log('Clickhouse initialized');
+  log('Clickhouse initialized', params);
 
   return client;
 }

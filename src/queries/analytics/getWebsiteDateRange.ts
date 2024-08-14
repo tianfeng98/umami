@@ -4,10 +4,13 @@ import { runQuery, CLICKHOUSE, PRISMA } from 'lib/db';
 import { DEFAULT_RESET_DATE } from 'lib/constants';
 
 export async function getWebsiteDateRange(...args: [websiteId: string]) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getWebsiteDateRange',
+  );
 }
 
 async function relationalQuery(websiteId: string) {

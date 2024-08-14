@@ -1206,17 +1206,17 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@clickhouse/client-common@1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@clickhouse/client-common/-/client-common-1.0.2.tgz#0fe0a4b33101c08d85c1279e4d74b2a92d42d996"
-  integrity sha512-5oI2URFsXlzoysv5lAxoTUAnAHjXnaJ+1Jz3HUARR06Hkbr1sN0pGxfGwgjEd8E/lI4+UNdNEZicG2rlFnWSaA==
+"@clickhouse/client-common@1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npmmirror.com/@clickhouse/client-common/-/client-common-1.4.1.tgz#23c6ffbff5717729e533301c9f595cd79af221ef"
+  integrity sha512-f5eoTrUSDplrMoi3ddeZ0MzGTn0iGMByEQ8j63eVMoBSOI2+F6jEIPcW2tWofT79Rvnn3RRlveYcShiaIiCJyw==
 
-"@clickhouse/client@^1.0.2":
-  version "1.0.2"
-  resolved "https://registry.yarnpkg.com/@clickhouse/client/-/client-1.0.2.tgz#7d9675e697ce697f1e6777f4c66ca6d3384e7325"
-  integrity sha512-PaK0GLjIrlCpXevrp9gliOrurna6MjMMFBgZhDh6Zup8IuJCjQru4LkNsWUl3hJ2nua6+Ygag14iB8ILbeaIjg==
+"@clickhouse/client@^1.4.1":
+  version "1.4.1"
+  resolved "https://registry.npmmirror.com/@clickhouse/client/-/client-1.4.1.tgz#be4303d81f42835c5f168de61babd1a67d821f5a"
+  integrity sha512-12iV+MeykxdQySRFHwaVU+hKUv3JP6kdwOI+z3zzyfPVYHynTlV8emJjjGZR0+VfRaj3PCMuQfryfsJ82nh9WQ==
   dependencies:
-    "@clickhouse/client-common" "1.0.2"
+    "@clickhouse/client-common" "1.4.1"
 
 "@colors/colors@1.5.0":
   version "1.5.0"

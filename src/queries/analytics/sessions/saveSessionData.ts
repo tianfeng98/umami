@@ -3,8 +3,9 @@ import { uuid } from 'lib/crypto';
 import { flattenJSON, getStringValue } from 'lib/data';
 import prisma from 'lib/prisma';
 import { DynamicData } from 'lib/types';
-import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
+import { CLICKHOUSE, PRISMA, runQuery, KAFKA } from 'lib/db';
 import kafka from 'lib/kafka';
+import kafkaApi from 'lib/api2kafka';
 
 export async function saveSessionData(data: {
   websiteId: string;
@@ -12,10 +13,14 @@ export async function saveSessionData(data: {
   sessionData: DynamicData;
   createdAt?: string;
 }) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(data),
-    [CLICKHOUSE]: () => clickhouseQuery(data),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(data),
+      [CLICKHOUSE]: () => clickhouseQuery(data),
+      [KAFKA]: () => kafkaApiQuery(data),
+    },
+    'saveSessionData',
+  );
 }
 
 export async function relationalQuery(data: {
@@ -82,6 +87,36 @@ async function clickhouseQuery(data: {
   const { websiteId, sessionId, sessionData, createdAt } = data;
 
   const { getDateFormat, sendMessages } = kafka;
+
+  const jsonKeys = flattenJSON(sessionData);
+
+  const messages = jsonKeys.map(({ key, value, dataType }) => {
+    return {
+      website_id: websiteId,
+      session_id: sessionId,
+      data_key: key,
+      data_type: dataType,
+      string_value: getStringValue(value, dataType),
+      number_value: dataType === DATA_TYPE.number ? value : null,
+      date_value: dataType === DATA_TYPE.date ? getDateFormat(value) : null,
+      created_at: createdAt,
+    };
+  });
+
+  await sendMessages(messages, 'session_data');
+
+  return data;
+}
+
+async function kafkaApiQuery(data: {
+  websiteId: string;
+  sessionId: string;
+  sessionData: DynamicData;
+  createdAt?: string;
+}) {
+  const { websiteId, sessionId, sessionData, createdAt } = data;
+
+  const { getDateFormat, sendMessages } = kafkaApi;
 
   const jsonKeys = flattenJSON(sessionData);
 

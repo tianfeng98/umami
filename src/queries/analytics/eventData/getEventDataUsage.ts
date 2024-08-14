@@ -2,10 +2,13 @@ import clickhouse from 'lib/clickhouse';
 import { CLICKHOUSE, PRISMA, runQuery, notImplemented } from 'lib/db';
 
 export function getEventDataUsage(...args: [websiteIds: string[], startDate: Date, endDate: Date]) {
-  return runQuery({
-    [PRISMA]: notImplemented,
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: notImplemented,
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getEventDataUsage',
+  );
 }
 
 function clickhouseQuery(

@@ -4,10 +4,13 @@ import prisma from 'lib/prisma';
 import { QueryFilters } from 'lib/types';
 
 export function getEvents(...args: [websiteId: string, filters: QueryFilters]) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getEvents',
+  );
 }
 
 function relationalQuery(websiteId: string, filters: QueryFilters) {

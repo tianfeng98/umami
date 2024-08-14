@@ -7,10 +7,13 @@ import { QueryFilters } from 'lib/types';
 export async function getPageviewMetrics(
   ...args: [websiteId: string, type: string, filters: QueryFilters, limit?: number, offset?: number]
 ) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getPageviewMetrics',
+  );
 }
 
 async function relationalQuery(

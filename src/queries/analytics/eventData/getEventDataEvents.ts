@@ -6,10 +6,13 @@ import { QueryFilters, WebsiteEventData } from 'lib/types';
 export async function getEventDataEvents(
   ...args: [websiteId: string, filters: QueryFilters]
 ): Promise<WebsiteEventData[]> {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getEventDataEvents',
+  );
 }
 
 async function relationalQuery(websiteId: string, filters: QueryFilters) {

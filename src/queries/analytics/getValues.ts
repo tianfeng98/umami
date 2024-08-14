@@ -5,10 +5,13 @@ import { runQuery, CLICKHOUSE, PRISMA } from 'lib/db';
 export async function getValues(
   ...args: [websiteId: string, column: string, startDate: Date, endDate: Date, search: string]
 ) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getValues',
+  );
 }
 
 async function relationalQuery(

@@ -1,9 +1,10 @@
 import { Prisma } from '@prisma/client';
 import { DATA_TYPE } from 'lib/constants';
 import { uuid } from 'lib/crypto';
-import { CLICKHOUSE, PRISMA, runQuery } from 'lib/db';
+import { CLICKHOUSE, PRISMA, runQuery, KAFKA } from 'lib/db';
 import { flattenJSON, getStringValue } from 'lib/data';
 import kafka from 'lib/kafka';
+import kafkaApi from 'lib/api2kafka';
 import prisma from 'lib/prisma';
 import { DynamicData } from 'lib/types';
 
@@ -16,10 +17,14 @@ export async function saveEventData(data: {
   eventData: DynamicData;
   createdAt?: string;
 }) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(data),
-    [CLICKHOUSE]: () => clickhouseQuery(data),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(data),
+      [CLICKHOUSE]: () => clickhouseQuery(data),
+      [KAFKA]: () => kafkaApiQuery(data),
+    },
+    'saveEventData',
+  );
 }
 
 async function relationalQuery(data: {
@@ -60,6 +65,42 @@ async function clickhouseQuery(data: {
   const { websiteId, sessionId, eventId, urlPath, eventName, eventData, createdAt } = data;
 
   const { getDateFormat, sendMessages } = kafka;
+
+  const jsonKeys = flattenJSON(eventData);
+
+  const messages = jsonKeys.map(({ key, value, dataType }) => {
+    return {
+      website_id: websiteId,
+      session_id: sessionId,
+      event_id: eventId,
+      url_path: urlPath,
+      event_name: eventName,
+      data_key: key,
+      data_type: dataType,
+      string_value: getStringValue(value, dataType),
+      number_value: dataType === DATA_TYPE.number ? value : null,
+      date_value: dataType === DATA_TYPE.date ? getDateFormat(value) : null,
+      created_at: createdAt,
+    };
+  });
+
+  await sendMessages(messages, 'event_data');
+
+  return data;
+}
+
+async function kafkaApiQuery(data: {
+  websiteId: string;
+  eventId: string;
+  sessionId?: string;
+  urlPath?: string;
+  eventName?: string;
+  eventData: DynamicData;
+  createdAt?: string;
+}) {
+  const { websiteId, sessionId, eventId, urlPath, eventName, eventData, createdAt } = data;
+
+  const { getDateFormat, sendMessages } = kafkaApi;
 
   const jsonKeys = flattenJSON(eventData);
 

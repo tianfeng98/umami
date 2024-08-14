@@ -5,10 +5,13 @@ import { EVENT_TYPE } from 'lib/constants';
 import { QueryFilters } from 'lib/types';
 
 export async function getSessionStats(...args: [websiteId: string, filters: QueryFilters]) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getSessionStats',
+  );
 }
 
 async function relationalQuery(websiteId: string, filters: QueryFilters) {

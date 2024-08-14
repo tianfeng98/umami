@@ -7,10 +7,13 @@ import { QueryFilters } from 'lib/types';
 export async function getInsights(
   ...args: [websiteId: string, fields: { name: string; type?: string }[], filters: QueryFilters]
 ) {
-  return runQuery({
-    [PRISMA]: () => relationalQuery(...args),
-    [CLICKHOUSE]: () => clickhouseQuery(...args),
-  });
+  return runQuery(
+    {
+      [PRISMA]: () => relationalQuery(...args),
+      [CLICKHOUSE]: () => clickhouseQuery(...args),
+    },
+    'getInsights',
+  );
 }
 
 async function relationalQuery(
