@@ -22,7 +22,7 @@ if (!process.env.SKIP_DB_CHECK && !process.env.DATABASE_TYPE) {
   checkMissing(['DATABASE_URL']);
 }
 
-if (process.env.CLICKHOUSE_URL) {
+if (process.env.CLICKHOUSE_URL && !process.env.KAFKA_API) {
   checkMissing(['KAFKA_BROKER', 'KAFKA_URL', 'REDIS_URL']);
 }
 
